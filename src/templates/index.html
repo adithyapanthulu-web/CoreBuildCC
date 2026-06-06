@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CoreBuild AI Inspection</title>
+
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="icon" href="/static/favicon.ico">
+<link rel="apple-touch-icon" href="/static/logos/apple-touch-icon.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="bg-glow"></div>
+
+<nav class="navbar">
+
+<div class="logo">
+CoreBuild <span>AI</span>
+</div>
+
+<div style="display:flex;align-items:center;gap:12px;">
+
+<a href="tel:+919108042362" class="nav-btn">
+<i class="fas fa-phone"></i>
+Call
+</a>
+
+<a
+href="https://wa.me/918867161823?text=Hello%20CoreBuild%20Team,%0A%0AI%20would%20like%20to%20know%20more%20about%20your%20construction%20chemical%20solutions%20and%20technical%20services."
+target="_blank"
+class="nav-btn">
+WhatsApp
+</a>
+
+<div class="burger-menu" onclick="toggleMenu()">
+<i class="fas fa-bars"></i>
+</div>
+
+</div>
+
+</nav>
+
+<div id="mobileOverlay" class="mobile-overlay" onclick="closeMenu()">
+
+<div id="mobileMenu" class="mobile-menu" onclick="event.stopPropagation()">
+
+<a href="#" onclick="closeMenu()">Home</a>
+<a href="#brands" onclick="closeMenu()">Trusted Brands</a>
+<a href="#upload" onclick="closeMenu()">Start Inspection</a>
+<a href="#contact" onclick="closeMenu()">Contact</a>
+<a href="tel:+919108042362">Call CoreBuild</a>
+<a href="https://www.instagram.com/corebuild.cc" target="_blank">Instagram</a>
+
+</div>
+
+</div>
+
+<section class="hero">
+
+<div class="hero-badge">
+AI Powered Construction Diagnostics
+</div>
+
+<h1>
+Scan. Diagnose. Repair.
+</h1>
+
+<p>
+AI-powered construction diagnostics and rehabilitation recommendations
+for waterproofing, structural repair and premium treatment systems.
+</p>
+
+<div class="quota-card">
+
+<div class="quota-title">
+7 AI Inspections Daily
+</div>
+
+<div class="quota-count">
+{{ remaining }} Remaining Today
+</div>
+
+</div>
+
+<div class="hero-buttons">
+
+<a href="#upload" class="primary-btn">
+Start Inspection
+</a>
+
+<a href="#brands" class="secondary-btn">
+Trusted Brands
+</a>
+
+</div>
+
+</section>
+
+<section class="section">
+
+<h2>
+Why CoreBuild Construction Chemicals
+</h2>
+
+<div class="card-grid">
+
+<div class="glass-card">
+<h3>AI Diagnostics</h3>
+<p>Construction defect recognition powered by AI vision and technical analysis.</p>
+</div>
+
+<div class="glass-card">
+<h3>Engineering Insight</h3>
+<p>Structured diagnostics with root-cause identification and repair recommendations.</p>
+</div>
+
+<div class="glass-card">
+<h3>Technical Support</h3>
+<p>Guidance supported by CoreBuild construction chemical expertise.</p>
+</div>
+
+<div class="glass-card">
+<h3>Trusted Solutions</h3>
+<p>Premium rehabilitation and waterproofing systems from trusted manufacturers.</p>
+</div>
+
+</div>
+
+</section>
+
+<section id="brands" class="section">
+
+<h2>
+Trusted Brands
+</h2>
+
+<div style="
+width:100%;
+max-width:1050px;
+margin:35px auto 0;
+padding:0;
+overflow:hidden;
+">
+
+<img
+src="/static/logos/brand_strip.png"
+alt="CoreBuild Trusted Brands"
+style="
+width:100%;
+height:auto;
+display:block;
+margin:0 auto;
+border-radius:20px;
+">
+
+</div>
+
+</section>
+
+<section id="upload" class="section">
+
+<div class="upload-card">
+
+<h2>
+Start AI Inspection
+</h2>
+
+<p style="margin-bottom:20px;color:#D4CEC5">
+Capture or upload a construction image and receive AI-powered engineering diagnostics.
+</p>
+
+<form action="/analyze" method="POST" enctype="multipart/form-data" id="uploadForm">
+
+<input
+type="file"
+name="file"
+id="inspectionFile"
+accept="image/*"
+style="display:none;"
+required>
+
+<div class="upload-choice-row">
+
+<button type="button" onclick="openCamera()" class="primary-btn upload-big-btn">
+<i class="fas fa-camera"></i>
+Take Photo
+</button>
+
+<button type="button" onclick="openGallery()" class="secondary-btn upload-big-btn">
+<i class="fas fa-images"></i>
+Choose From Gallery
+</button>
+
+</div>
+
+<div id="selectedFile" class="selected-file">
+No image selected
+</div>
+
+<button type="submit" class="primary-btn analyze-btn">
+Analyze Image
+</button>
+
+</form>
+
+</div>
+
+</section>
+
+<section id="contact" class="section">
+
+<div class="contact-card">
+
+<h2>
+CoreBuild Construction Chemicals
+</h2>
+
+<p>
+8867161823 / 9108042362
+</p>
+
+<p>
+Corebuildccd@gmail.com
+</p>
+
+<div class="address-block">
+
+<p>
+#692 Ground Floor, 6th Block<br>
+Dr Rajkumar Road, Rajajinagar, Bangalore – 560010
+</p>
+
+</div>
+
+<div class="contact-actions">
+
+<a
+href="https://www.google.com/maps/place/Corebuild+construction+chemicals/@12.9786036,77.5526073,16.84z/data=!4m10!1m2!2m1!1s692+6th+Block+Rajajinagar+Bangalore!3m6!1s0x3bae3dff9efb7e77:0x9782cec473127c62!8m2!3d12.9801271!4d77.5541856!15sCiM2OTIgNnRoIEJsb2NrIFJhamFqaW5hZ2FyIEJhbmdhbG9yZZIBIGNvbnN0cnVjdGlvbl9tYXRlcmlhbF93aG9sZXNhbGVy4AEA!16s%2Fg%2F11zbt16w2h"
+target="_blank"
+class="maps-btn">
+Open Google Maps
+</a>
+
+<a
+href="https://wa.me/918867161823?text=Hello%20CoreBuild%20Team,%0A%0AI%20would%20like%20to%20know%20more%20about%20your%20construction%20chemical%20solutions%20and%20technical%20services."
+target="_blank"
+class="support-btn">
+WhatsApp Support
+</a>
+
+<a href="https://www.instagram.com/corebuild.cc" target="_blank" class="instagram-btn">
+<i class="fab fa-instagram"></i>
+Instagram
+</a>
+
+<a href="tel:+919108042362" class="call-btn">
+<i class="fas fa-phone"></i>
+Call CoreBuild
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+<footer class="copyright-footer">
+© 2026 CoreBuild Construction Chemicals • All Rights Reserved
+</footer>
+
+<div id="scanOverlay" class="scan-overlay">
+
+<div class="scan-box">
+
+<div class="scan-ring"></div>
+
+<h2>
+CoreBuild AI Engineering Scan
+</h2>
+
+<div id="scanText" class="scan-text">
+Uploading image...
+</div>
+
+<div class="scan-bar">
+<div class="scan-progress"></div>
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function toggleMenu(){
+
+document
+.getElementById("mobileOverlay")
+.classList.toggle("show-overlay");
+
+}
+
+function closeMenu(){
+
+document
+.getElementById("mobileOverlay")
+.classList.remove("show-overlay");
+
+}
+
+const inspectionFile =
+document.getElementById("inspectionFile");
+
+const uploadForm =
+document.getElementById("uploadForm");
+
+function openCamera(){
+
+inspectionFile.setAttribute(
+"capture",
+"environment"
+);
+
+inspectionFile.click();
+
+}
+
+function openGallery(){
+
+inspectionFile.removeAttribute(
+"capture"
+);
+
+inspectionFile.click();
+
+}
+
+inspectionFile.addEventListener(
+"change",
+function(){
+
+if(this.files.length){
+
+document
+.getElementById("selectedFile")
+.innerHTML =
+"Selected: " + this.files[0].name;
+
+}
+
+}
+);
+
+if(uploadForm){
+
+uploadForm.addEventListener(
+"submit",
+function(){
+
+document
+.getElementById("scanOverlay")
+.style.display =
+"flex";
+
+const messages = [
+"Uploading image...",
+"Scanning construction surface...",
+"Detecting visible defect...",
+"Analyzing root cause...",
+"Matching repair system...",
+"Preparing AI report..."
+];
+
+let i = 0;
+
+setInterval(
+function(){
+
+i =
+(i + 1) %
+messages.length;
+
+document
+.getElementById("scanText")
+.innerHTML =
+messages[i];
+
+},
+850
+);
+
+}
+);
+
+}
+
+</script>
+
+</body>
+</html>

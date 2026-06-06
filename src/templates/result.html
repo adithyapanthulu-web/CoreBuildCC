@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+CoreBuild AI Report
+</title>
+
+<link rel="stylesheet"
+href="/static/css/style.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body class="result-body">
+
+<div class="bg-glow"></div>
+
+<!-- NAV -->
+
+<nav class="result-nav">
+
+<div class="logo">
+CoreBuild <span>AI</span>
+</div>
+
+<a
+href="/"
+class="back-btn">
+
+Back Home
+
+</a>
+
+</nav>
+
+<!-- REPORT -->
+
+<div class="report-container">
+
+<!-- HEADER -->
+
+<div class="report-header">
+
+<h1>
+AI Engineering Inspection Report
+</h1>
+
+<p>
+AI-powered construction diagnostics and rehabilitation recommendations
+</p>
+
+</div>
+
+<!-- IMAGE -->
+
+<div class="report-image-card">
+
+<h3>
+Inspection Image
+</h3>
+
+<img
+src="{{ image }}"
+class="inspection-image"
+alt="Inspection Image">
+
+</div>
+
+<!-- REPORT CARDS -->
+
+<div class="report-card">
+<h3>Detected Issue</h3>
+<p>{{ result.identified_issues }}</p>
+</div>
+
+<div class="report-card">
+<h3>Root Cause</h3>
+<p>{{ result.root_cause }}</p>
+</div>
+
+<div class="report-card">
+<h3>Severity Assessment</h3>
+<p>{{ result.severity }}</p>
+</div>
+
+<div class="report-card">
+<h3>Recommended Treatment</h3>
+<p>{{ result.recommended_treatment }}</p>
+</div>
+
+<div class="report-card">
+<h3>Site Recommendation</h3>
+<p>{{ result.site_recommendation }}</p>
+</div>
+
+<!-- PRODUCT -->
+
+{% if result.catalog_recommendation and result.catalog_recommendation|trim != "" %}
+
+<div class="ai-card">
+
+<h2>
+AI Product System Recommendation
+</h2>
+
+<p>
+{{ result.catalog_recommendation }}
+</p>
+
+</div>
+
+{% endif %}
+
+<!-- CHAT -->
+
+<div class="chat-card">
+
+<h2>
+Ask Your Doubts on CoreBuild AI
+</h2>
+
+<p class="chat-subtitle">
+Understand your inspection better with AI clarification before contacting technical support.
+</p>
+
+<div class="question-counter">
+3 / 3 Questions Remaining
+</div>
+
+<button
+onclick="openChatModal()"
+class="chat-btn">
+
+Unlock CoreBuild AI
+
+</button>
+
+<div
+id="chatArea"
+style="display:none;">
+
+<div
+id="chatMessages"
+class="chat-messages">
+
+<div class="ai-msg">
+<b>CoreBuild AI</b>
+Hello. Ask your doubts regarding this inspection report.
+</div>
+
+</div>
+
+<div class="chat-input-row">
+
+<input
+id="chatInput"
+type="text"
+placeholder="Ask about this inspection...">
+
+<button
+onclick="sendQuestion()"
+class="chat-send-btn">
+
+Ask
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ACTIONS -->
+
+<div class="action-buttons">
+
+<button
+onclick="openModal()"
+class="download-btn">
+
+Download Your AI Report
+
+</button>
+
+<a
+href="https://wa.me/918867161823?text=Hello%20CoreBuild%20Team,%0A%0AI%20need%20technical%20support%20regarding%20my%20inspection%20report."
+target="_blank"
+class="support-btn">
+
+Need Technical Assistance?
+
+</a>
+
+<a
+href="tel:+919108042362"
+class="call-btn">
+
+<i class="fas fa-phone"></i>
+Call CoreBuild
+
+</a>
+
+</div>
+
+<!-- CHAT MODAL -->
+
+<div
+id="chatModal"
+class="modal">
+
+<div class="modal-box">
+
+<h2>
+Unlock CoreBuild AI
+</h2>
+
+<p class="modal-note">
+Enter your details to continue with CoreBuild AI.
+</p>
+
+<input
+id="chatName"
+type="text"
+placeholder="Your Name">
+
+<input
+id="chatPhone"
+type="text"
+placeholder="WhatsApp Number">
+
+<button
+onclick="unlockChat()"
+class="download-btn">
+
+Unlock CoreBuild AI
+
+</button>
+
+<button
+onclick="closeChatModal()"
+class="back-btn modal-close">
+
+Close
+
+</button>
+
+</div>
+
+</div>
+
+<!-- REPORT MODAL -->
+
+<div
+id="reportModal"
+class="modal">
+
+<div class="modal-box">
+
+<h2>
+Download Your AI Report
+</h2>
+
+<p class="modal-note">
+Enter your details to generate your AI report.
+</p>
+
+<form
+action="/download-report"
+method="POST">
+
+<input
+type="text"
+name="name"
+placeholder="Your Name"
+required>
+
+<input
+type="text"
+name="phone"
+placeholder="WhatsApp Number"
+required>
+
+<button
+type="submit"
+class="download-btn">
+
+Generate Report
+
+</button>
+
+</form>
+
+<button
+onclick="closeModal()"
+class="back-btn modal-close">
+
+Close
+
+</button>
+
+</div>
+
+</div>
+
+<!-- CONTACT -->
+
+<div class="contact-report">
+
+<h2>
+CoreBuild Construction Chemicals
+</h2>
+
+<p>
+Phone: 8867161823 / 9108042362
+</p>
+
+<p>
+Email: Corebuildccd@gmail.com
+</p>
+
+<p>
+#692 Ground Floor, 6th Block,<br>
+Dr Rajkumar Road,<br>
+Rajajinagar, Bangalore – 560010
+</p>
+
+<div class="contact-actions">
+
+<a
+href="https://maps.google.com/?q=692+6th+Block+Rajajinagar+Bangalore"
+target="_blank"
+class="maps-btn">
+
+Open Google Maps
+
+</a>
+
+<a
+href="tel:+919108042362"
+class="call-btn">
+
+<i class="fas fa-phone"></i>
+Call CoreBuild
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- JS -->
+
+<script>
+
+let chatUnlocked=false;
+let questionsLeft=3;
+
+function openModal(){
+
+document.getElementById(
+"reportModal"
+).style.display="flex";
+
+}
+
+function closeModal(){
+
+document.getElementById(
+"reportModal"
+).style.display="none";
+
+}
+
+function openChatModal(){
+
+if(chatUnlocked){
+
+document.getElementById(
+"chatArea"
+).style.display="block";
+
+return;
+
+}
+
+document.getElementById(
+"chatModal"
+).style.display="flex";
+
+}
+
+function closeChatModal(){
+
+document.getElementById(
+"chatModal"
+).style.display="none";
+
+}
+
+async function unlockChat(){
+
+const name =
+document.getElementById(
+"chatName"
+).value;
+
+const phone =
+document.getElementById(
+"chatPhone"
+).value;
+
+if(!name || !phone){
+
+alert(
+"Please enter your details."
+);
+
+return;
+
+}
+
+try{
+
+await fetch(
+"/chat-unlock",
+{
+method:"POST",
+headers:{
+"Content-Type":
+"application/json"
+},
+body:JSON.stringify({
+name:name,
+phone:phone
+})
+}
+);
+
+chatUnlocked=true;
+
+document.getElementById(
+"chatModal"
+).style.display="none";
+
+document.getElementById(
+"chatArea"
+).style.display="block";
+
+}
+catch{
+
+alert(
+"Unable to unlock CoreBuild AI."
+);
+
+}
+
+}
+
+async function sendQuestion(){
+
+if(questionsLeft<=0){
+
+alert(
+"You've used all AI clarifications for this inspection."
+);
+
+return;
+
+}
+
+const input =
+document.getElementById(
+"chatInput"
+);
+
+const msg =
+input.value.trim();
+
+if(!msg) return;
+
+const area =
+document.getElementById(
+"chatMessages"
+);
+
+area.innerHTML +=
+`
+<div class="user-msg">
+<b>You</b>
+${msg}
+</div>
+`;
+
+input.value="";
+
+area.scrollTop =
+area.scrollHeight;
+
+try{
+
+const response =
+await fetch(
+"/chat",
+{
+method:"POST",
+headers:{
+"Content-Type":
+"application/json"
+},
+body:JSON.stringify({
+message:msg
+})
+}
+);
+
+const data =
+await response.json();
+
+area.innerHTML +=
+`
+<div class="ai-msg">
+<b>CoreBuild AI</b>
+${data.reply}
+</div>
+`;
+
+questionsLeft =
+data.remaining;
+
+document.querySelector(
+".question-counter"
+).innerHTML =
+questionsLeft +
+" / 3 Questions Remaining";
+
+if(questionsLeft<=0){
+
+area.innerHTML +=
+`
+<div class="ai-msg">
+<b>CoreBuild AI</b>
+You have used all AI clarifications for this inspection. Please download your report or contact our technical team.
+</div>
+`;
+
+}
+
+area.scrollTop =
+area.scrollHeight;
+
+}
+catch{
+
+area.innerHTML +=
+`
+<div class="ai-msg">
+<b>CoreBuild AI</b>
+Unable to connect. Please try again.
+</div>
+`;
+
+}
+
+}
+
+window.onclick=function(event){
+
+const report =
+document.getElementById(
+"reportModal"
+);
+
+const chat =
+document.getElementById(
+"chatModal"
+);
+
+if(event.target==report){
+report.style.display="none";
+}
+
+if(event.target==chat){
+chat.style.display="none";
+}
+
+}
+
+</script>
+
+</body>
+</html>
