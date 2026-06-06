@@ -8,3 +8,4 @@ pillow-heif
 reportlab
 openai
 jinja2
+itsdangerous
