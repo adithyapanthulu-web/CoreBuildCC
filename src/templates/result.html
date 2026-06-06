@@ -178,10 +178,11 @@
             Enter your details to generate your AI report.
           </p>
 
-          <form action="/download-report" method="POST">
-            <input type="text" name="name" placeholder="Your Name" required />
+          <form id="downloadForm" action="/download-report" method="POST">
+            <input id="downloadName" type="text" name="name" placeholder="Your Name" required />
 
             <input
+              id="downloadPhone"
               type="text"
               name="phone"
               placeholder="WhatsApp Number"

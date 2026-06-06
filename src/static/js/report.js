@@ -11,6 +11,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const chatArea = document.getElementById("chatArea");
   const chatModal = document.getElementById("chatModal");
   const reportModal = document.getElementById("reportModal");
+  const downloadForm = document.getElementById("downloadForm");
+  const downloadName = document.getElementById("downloadName");
+  const downloadPhone = document.getElementById("downloadPhone");
   const chatMessages = document.getElementById("chatMessages");
   const chatInput = document.getElementById("chatInput");
   const chatName = document.getElementById("chatName");
@@ -44,6 +47,13 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function openReportModal() {
+    if (existingChatName && existingChatPhone && downloadForm && downloadName && downloadPhone) {
+      downloadName.value = existingChatName;
+      downloadPhone.value = existingChatPhone;
+      downloadForm.submit();
+      return;
+    }
+
     if (reportModal) reportModal.style.display = "flex";
   }
 
