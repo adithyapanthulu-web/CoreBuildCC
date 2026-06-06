@@ -1,11 +1,8 @@
 import sqlite3
 from datetime import datetime
 
-DATABASE = "corebuild.db"
-
-
 def get_connection():
-    conn = sqlite3.connect(DATABASE)
+    conn = sqlite3.connect("../data/corebuild.db")
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -212,14 +209,25 @@ def get_dashboard_stats():
     )
 
     blocked = cur.fetchone()["total"]
-
+    cur.execute(
+        """
+        SELECT
+        name,
+        phone,
+        date,
+        downloads
+        FROM users
+        ORDER BY id DESC
+        """
+    )
+    leads = cur.fetchall()
     conn.close()
 
-    return {
+    return ({
 
         "total_scans": total_scans,
         "today_scans": today_scans,
         "unique_devices": unique_devices,
         "blocked_attempts": blocked
 
-    }
+    },leads)

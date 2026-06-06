@@ -22,6 +22,7 @@ import shutil
 import uuid
 import os
 import base64
+from pathlib import Path
 
 from datetime import datetime
 
@@ -43,30 +44,33 @@ from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.pagesizes import A4
 
 from openai import OpenAI
-from config import OPENAI_API_KEY
+from config import OPENAI_API_KEY,CORE_BUILD_SECRET
 
 from ai_engine import analyze_image
 
 from database import (
 
-    init_db,
     update_download,
-    get_connection,
-
     get_device_scans,
     log_ai_scan,
     get_dashboard_stats
-
 )
 
 app = FastAPI()
 
 app.add_middleware(
     SessionMiddleware,
-    secret_key="corebuild_ai_secret"
+    secret_key=CORE_BUILD_SECRET
 )
 
-init_db()
+WORKSPACE_ROOT = Path(__file__).resolve().parent.parent
+DATA_FOLDER = WORKSPACE_ROOT / "data"
+UPLOAD_FOLDER = DATA_FOLDER / "uploads"
+REPORT_FOLDER = DATA_FOLDER / "reports"
+CHAT_SYSTEM_PROMPT_FILE = WORKSPACE_ROOT/ "src" / "prompts" / "base_prompt.txt"
+
+CHAT_SYSTEM_PROMPT = CHAT_SYSTEM_PROMPT_FILE.read_text(encoding="utf-8").strip()
+
 register_heif_opener()
 
 app.mount(
@@ -75,62 +79,23 @@ app.mount(
     name="static"
 )
 
-templates = Jinja2Templates(
-    directory="templates"
+app.mount(
+    "/uploads",
+    StaticFiles(directory=str(UPLOAD_FOLDER)),
+    name="uploads"
 )
 
-client = OpenAI(
-    api_key=OPENAI_API_KEY
+app.mount(
+    "/reports",
+    StaticFiles(directory=str(REPORT_FOLDER)),
+    name="reports"
 )
+
+templates = Jinja2Templates(directory="templates")
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 result_cache = {}
 image_cache = ""
-
-REPORT_FOLDER = (
-    "static/reports"
-)
-
-os.makedirs(
-    REPORT_FOLDER,
-    exist_ok=True
-)
-
-CHAT_SYSTEM_PROMPT = """
-You are CoreBuild AI.
-
-You ONLY answer:
-
-- construction defects
-- waterproofing
-- leakage
-- repair systems
-- rehabilitation
-- inspection clarification
-
-Rules:
-
-- use inspection context
-- professional
-- concise
-- no pricing
-- no cost estimates
-- no backend logic
-- no internal recommendation logic
-- no Fosroc priority disclosure
-- no unrelated topics
-- no certification
-- preliminary guidance only
-
-If unrelated:
-
-Politely refuse.
-
-Encourage:
-
-- AI report download
-- CoreBuild technical support
-when appropriate.
-"""
 
 # HOME
 
@@ -140,38 +105,22 @@ async def home(
     device_id: str | None = Cookie(default=None)
 ):
 
-    today = datetime.now().strftime(
-        "%d-%m-%Y"
-    )
-
+    today = datetime.now().strftime("%d-%m-%Y")
     scans = 0
 
     if device_id:
+        scans = get_device_scans(device_id, today)
+    else:
+        device_id = str(uuid.uuid4())
 
-        scans = get_device_scans(
-            device_id,
-            today
-        )
-
-    remaining = max(
-        0,
-        7 - scans
-    )
+    remaining = max(0, 7 - scans)
 
     response = templates.TemplateResponse(
-        request,
-        "index.html",
-        {
-            "remaining": remaining
-        }
+        request,"index.html",
+        {"remaining": remaining}
     )
 
-    if not device_id:
-
-        device_id = str(
-            uuid.uuid4()
-        )
-
+    if request.cookies.get("device_id") is None:
         response.set_cookie(
             key="device_id",
             value=device_id,
@@ -184,127 +133,16 @@ async def home(
 # PREMIUM ADMIN DASHBOARD
 
 @app.get("/admin-leads")
-async def admin_leads():
-
-    conn = get_connection()
-    cur = conn.cursor()
-
-    stats = get_dashboard_stats()
-
-    cur.execute(
-        """
-        SELECT
-        name,
-        phone,
-        date,
-        downloads
-        FROM users
-        ORDER BY id DESC
-        """
+async def admin_leads(request: Request):
+    stats,leads = get_dashboard_stats()
+    return templates.TemplateResponse(
+        "admin_leads.html",
+        {
+            "request": request,
+            "leads": leads,
+            "stats": stats
+        }
     )
-
-    leads = cur.fetchall()
-    conn.close()
-
-    html = f"""
-    <html>
-    <head>
-    <title>CoreBuild Dashboard</title>
-
-    <style>
-
-    body{{
-        font-family:Arial;
-        background:#f5f0e8;
-        padding:40px
-    }}
-
-    .card{{
-        background:white;
-        padding:22px;
-        border-radius:18px;
-        margin-bottom:18px;
-        box-shadow:0 8px 25px rgba(0,0,0,.08)
-    }}
-
-    table{{
-        width:100%;
-        border-collapse:collapse;
-        background:white;
-        border-radius:16px;
-        overflow:hidden
-    }}
-
-    th{{
-        background:#111315;
-        color:white;
-        padding:14px
-    }}
-
-    td{{
-        padding:12px;
-        border:1px solid #ddd
-    }}
-
-    h1,h2{{
-        color:#111315
-    }}
-
-    </style>
-    </head>
-
-    <body>
-
-    <h1>
-    CoreBuild AI Dashboard
-    </h1>
-
-    <div class='card'>
-
-    <h3>Total AI Scans:
-    {stats["total_scans"]}</h3>
-
-    <h3>Today's Scans:
-    {stats["today_scans"]}</h3>
-
-    <h3>Unique Devices:
-    {stats["unique_devices"]}</h3>
-
-    <h3>Blocked Attempts:
-    {stats["blocked_attempts"]}</h3>
-
-    </div> <h2>
-    Report Leads
-    </h2>
-
-    <table>
-
-    <tr>
-    <th>Name</th>
-    <th>Phone</th>
-    <th>Date</th>
-    <th>Reports</th>
-    </tr>
-    """
-
-    for row in leads:
-
-        html += f"""
-        <tr>
-        <td>{row['name']}</td>
-        <td>{row['phone']}</td>
-        <td>{row['date']}</td>
-        <td>{row['downloads']}</td>
-        </tr>
-        """
-
-    html += """
-    </table>
-    </body>
-    </html>
-    """
-
-    return HTMLResponse(html)
 
 
 # ANALYZE ROUTE
@@ -319,20 +157,12 @@ async def analyze(
     global result_cache
     global image_cache
 
-    today = datetime.now().strftime(
-        "%d-%m-%Y"
-    )
+    today = datetime.now().strftime("%d-%m-%Y")
 
     if not device_id:
+        device_id = str(uuid.uuid4())
 
-        device_id = str(
-            uuid.uuid4()
-        )
-
-    scans_today = get_device_scans(
-        device_id,
-        today
-    )
+    scans_today = get_device_scans(device_id,today)
 
     if scans_today >= 7:
 
@@ -342,14 +172,8 @@ async def analyze(
             blocked=True
         )
 
-        response = HTMLResponse(
-            """
-            <h2 style='font-family:Arial;padding:40px'>
-            Daily AI inspection limit reached.<br><br>
-            Please contact CoreBuild technical support.
-            </h2>
-            """,
-            status_code=403
+        response = templates.TemplateResponse(
+            "limit.html",{"request": request}
         )
 
         response.set_cookie(
@@ -366,9 +190,7 @@ async def analyze(
         + file.filename
     )
 
-    upload_path = (
-        f"static/uploads/{filename}"
-    )
+    upload_path = UPLOAD_FOLDER / filename
 
     with open(
         upload_path,
@@ -380,20 +202,12 @@ async def analyze(
             buffer
         )
 
-    if upload_path.lower().endswith(
-        (
-            ".heic",
-            ".heif"
-        )
+    if upload_path.suffix.lower() in (
+        ".heic",
+        ".heif"
     ):
 
-        jpg_path = (
-            upload_path.rsplit(
-                ".",
-                1
-            )[0]
-            + ".jpg"
-        )
+        jpg_path = upload_path.with_suffix(".jpg")
 
         image = Image.open(
             upload_path
@@ -466,7 +280,8 @@ async def analyze(
         ] = ""
 
     result_cache = result
-    image_cache = upload_path
+    image_cache = str(upload_path)
+    image_url = "/uploads/" + upload_path.name
 
     # CHAT SESSION RESET
 
@@ -487,7 +302,7 @@ async def analyze(
         "result.html",
         {
             "result": result,
-            "image": "/" + upload_path
+            "image": image_url
         }
     )
 
@@ -497,8 +312,9 @@ async def analyze(
         max_age=31536000
     )
 
-    return response# CHAT BACKEND
+    return response
 
+# CHAT BACKEND
 @app.post("/chat")
 async def chat_ai(
     request: Request
@@ -644,12 +460,10 @@ async def download_report(
         uuid.uuid4()
     )[:8].upper()
 
-    pdf_path = (
-        f"{REPORT_FOLDER}/{report_id}.pdf"
-    )
+    pdf_path = REPORT_FOLDER / f"{report_id}.pdf"
 
     doc = SimpleDocTemplate(
-        pdf_path,
+        str(pdf_path),
         pagesize=A4,
         rightMargin=28,
         leftMargin=28,
@@ -861,7 +675,7 @@ async def download_report(
         );
 
         window.location.href =
-        "/static/reports/{report_id}.pdf";
+        "/reports/{report_id}.pdf";
 
         </script>
         """

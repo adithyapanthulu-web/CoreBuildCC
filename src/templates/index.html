@@ -24,7 +24,7 @@
 CoreBuild <span>AI</span>
 </div>
 
-<div style="display:flex;align-items:center;gap:12px;">
+<div class="nav-actions">
 
 <a href="tel:+919108042362" class="nav-btn">
 <i class="fas fa-phone"></i>
@@ -140,24 +140,13 @@ Why CoreBuild Construction Chemicals
 Trusted Brands
 </h2>
 
-<div style="
-width:100%;
-max-width:1050px;
-margin:35px auto 0;
-padding:0;
-overflow:hidden;
-">
+<div class="brand-strip-container">
 
 <img
 src="/static/logos/brand_strip.png"
 alt="CoreBuild Trusted Brands"
-style="
-width:100%;
-height:auto;
-display:block;
-margin:0 auto;
-border-radius:20px;
-">
+class="brand-strip"
+>
 
 </div>
 
@@ -171,18 +160,18 @@ border-radius:20px;
 Start AI Inspection
 </h2>
 
-<p style="margin-bottom:20px;color:#D4CEC5">
+<p class="upload-description">
 Capture or upload a construction image and receive AI-powered engineering diagnostics.
 </p>
 
 <form action="/analyze" method="POST" enctype="multipart/form-data" id="uploadForm">
 
 <input
-type="file"
-name="file"
-id="inspectionFile"
-accept="image/*"
-style="display:none;"
+ type="file"
+ name="file"
+ id="inspectionFile"
+ accept="image/*"
+ class="hidden-input"
 required>
 
 <div class="upload-choice-row">

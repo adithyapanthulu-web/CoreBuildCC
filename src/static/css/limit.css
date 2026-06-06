@@ -1,0 +1,44 @@
+.limit-body{
+    font-family: Arial, sans-serif;
+    background: #f5f0e8;
+    min-height: 100vh;
+    color: #111315;
+}
+
+.limit-page{
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    text-align: center;
+}
+
+.limit-card{
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+    max-width: 680px;
+    padding: 48px 36px;
+}
+
+.limit-card h1{
+    margin-bottom: 18px;
+    font-size: 2.4rem;
+}
+
+.limit-card p{
+    margin-bottom: 28px;
+    line-height: 1.7;
+    color: #333;
+}
+
+.limit-button{
+    display: inline-block;
+    background: #111315;
+    color: white;
+    padding: 14px 26px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+}

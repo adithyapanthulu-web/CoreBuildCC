@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>CoreBuild Dashboard</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/admin.css">
+</head>
+<body class="admin-body">
+    <h1>CoreBuild AI Dashboard</h1>
+
+    <div class="admin-card">
+        <h3>Total AI Scans: {{ stats.total_scans }}</h3>
+        <h3>Today's Scans: {{ stats.today_scans }}</h3>
+        <h3>Unique Devices: {{ stats.unique_devices }}</h3>
+        <h3>Blocked Attempts: {{ stats.blocked_attempts }}</h3>
+    </div>
+
+    <h2>Report Leads</h2>
+
+    <table class="admin-table">
+        <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Date</th>
+            <th>Reports</th>
+        </tr>
+        {% for row in leads %}
+        <tr>
+            <td>{{ row['name'] }}</td>
+            <td>{{ row['phone'] }}</td>
+            <td>{{ row['date'] }}</td>
+            <td>{{ row['downloads'] }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4" class="empty-row">No leads found.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

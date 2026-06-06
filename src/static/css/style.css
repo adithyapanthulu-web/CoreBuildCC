@@ -289,27 +289,44 @@ box-shadow:
 transition:.35s;
 }
 
-.brand-row img:hover{
-transform:scale(1.08);
+.nav-actions{
+    display:flex;
+    align-items:center;
+    gap:12px;
 }
 
-/* FORMS */
-
-input[type=file]{
-width:100%;
-padding:16px;
-margin:20px 0;
-background:rgba(255,255,255,.04);
-border:1px solid rgba(216,195,165,.12);
-border-radius:18px;
-color:#F5F1EA;
+.brand-strip-container{
+    width:100%;
+    max-width:1050px;
+    margin:35px auto 0;
+    padding:0;
+    overflow:hidden;
 }
 
-/* REPORT */
+.brand-strip{
+    width:100%;
+    height:auto;
+    display:block;
+    margin:0 auto;
+    border-radius:20px;
+}
 
-.report-container{
-max-width:1100px;
-margin:50px auto;
+.hidden-input{
+    display:none;
+}
+
+.upload-description{
+    margin-bottom:20px;
+    color:#D4CEC5;
+}
+
+.hidden-panel{
+    display:none;
+}
+
+.empty-row{
+    text-align:center;
+}
 padding:0 20px;
 }
 
