@@ -1,8 +1,27 @@
 import sqlite3
 from datetime import datetime
+from pathlib import Path
+
+WORKSPACE_ROOT = Path(__file__).resolve().parent.parent
+DATA_FOLDER = WORKSPACE_ROOT / "data"
+UPLOAD_FOLDER = DATA_FOLDER / "uploads"
+REPORT_FOLDER = DATA_FOLDER / "reports"
+DB_FILE = DATA_FOLDER / "corebuild.db"
+
+
+def ensure_data_store():
+    DATA_FOLDER.mkdir(parents=True, exist_ok=True)
+    UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
+    REPORT_FOLDER.mkdir(parents=True, exist_ok=True)
+
+    if not DB_FILE.exists():
+        sqlite3.connect(DB_FILE).close()
+
+    init_db()
+
 
 def get_connection():
-    conn = sqlite3.connect("../data/corebuild.db")
+    conn = sqlite3.connect(DB_FILE)
     conn.row_factory = sqlite3.Row
     return conn
 

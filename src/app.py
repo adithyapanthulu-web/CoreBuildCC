@@ -48,17 +48,19 @@ from config import OPENAI_API_KEY,CORE_BUILD_SECRET
 from ai_engine import analyze_image
 
 from database import (
-    init_db,
+    ensure_data_store,
     update_download,
     get_device_scans,
     log_ai_scan,
     log_chat_history,
     get_chat_history,
-    get_dashboard_stats
+    get_dashboard_stats,
+    UPLOAD_FOLDER,
+    REPORT_FOLDER
 )
 
 app = FastAPI()
-init_db()
+ensure_data_store()
 
 app.add_middleware(
     SessionMiddleware,
@@ -66,9 +68,6 @@ app.add_middleware(
 )
 
 WORKSPACE_ROOT = Path(__file__).resolve().parent.parent
-DATA_FOLDER = WORKSPACE_ROOT / "data"
-UPLOAD_FOLDER = DATA_FOLDER / "uploads"
-REPORT_FOLDER = DATA_FOLDER / "reports"
 CHAT_SYSTEM_PROMPT_FILE = WORKSPACE_ROOT/ "src" / "context" / "base_prompt.txt"
 
 CHAT_SYSTEM_PROMPT = CHAT_SYSTEM_PROMPT_FILE.read_text(encoding="utf-8").strip()
