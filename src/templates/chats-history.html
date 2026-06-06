@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>CoreBuild Chat History</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <link rel="stylesheet" href="/static/css/admin.css" />
+  </head>
+  <body class="admin-body">
+    <h1>CoreBuild Chat History</h1>
+
+    <div class="admin-card">
+      <p>
+        All chat interactions stored in the <strong>chat_history</strong> table.
+      </p>
+    </div>
+
+    <h2>Chat Records</h2>
+
+    <table class="admin-table">
+      <tr>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Question</th>
+        <th>Response</th>
+        <th>Date</th>
+        <th>Timestamp</th>
+      </tr>
+      {% for row in chats %}
+      <tr>
+        <td>{{ row['name'] }}</td>
+        <td>{{ row['phone'] }}</td>
+        <td>{{ row['question'] }}</td>
+        <td>{{ row['response'] }}</td>
+        <td>{{ row['date'] }}</td>
+        <td>{{ row['timestamp'] }}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" class="empty-row">No chat history records found.</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </body>
+</html>

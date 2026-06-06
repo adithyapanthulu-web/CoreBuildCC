@@ -36,6 +36,20 @@ def init_db():
     )
     """)
 
+    # CHAT HISTORY
+
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS chat_history (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        phone TEXT,
+        question TEXT,
+        response TEXT,
+        date TEXT,
+        timestamp TEXT
+    )
+    """)
+
     conn.commit()
     conn.close()
 
@@ -158,6 +172,62 @@ def log_ai_scan(
 
     conn.commit()
     conn.close()
+
+
+def log_chat_history(name, phone, question, response_text):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    today = datetime.now().strftime("%d-%m-%Y")
+    timestamp = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+
+    cur.execute(
+        """
+        INSERT INTO chat_history (
+            name,
+            phone,
+            question,
+            response,
+            date,
+            timestamp
+        ) VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        (
+            name,
+            phone,
+            question,
+            response_text,
+            today,
+            timestamp
+        )
+    )
+
+    conn.commit()
+    conn.close()
+
+
+def get_chat_history():
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute(
+        """
+        SELECT
+            name,
+            phone,
+            question,
+            response,
+            date,
+            timestamp
+        FROM chat_history
+        ORDER BY id DESC
+        """
+    )
+
+    rows = cur.fetchall()
+    conn.close()
+
+    return rows
 
 
 # ----------------------------

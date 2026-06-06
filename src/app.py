@@ -18,10 +18,9 @@ from starlette.middleware.sessions import (
     SessionMiddleware
 )
 
+import re
 import shutil
 import uuid
-import os
-import base64
 from pathlib import Path
 
 from datetime import datetime
@@ -49,14 +48,17 @@ from config import OPENAI_API_KEY,CORE_BUILD_SECRET
 from ai_engine import analyze_image
 
 from database import (
-
+    init_db,
     update_download,
     get_device_scans,
     log_ai_scan,
+    log_chat_history,
+    get_chat_history,
     get_dashboard_stats
 )
 
 app = FastAPI()
+init_db()
 
 app.add_middleware(
     SessionMiddleware,
@@ -67,7 +69,7 @@ WORKSPACE_ROOT = Path(__file__).resolve().parent.parent
 DATA_FOLDER = WORKSPACE_ROOT / "data"
 UPLOAD_FOLDER = DATA_FOLDER / "uploads"
 REPORT_FOLDER = DATA_FOLDER / "reports"
-CHAT_SYSTEM_PROMPT_FILE = WORKSPACE_ROOT/ "src" / "prompts" / "base_prompt.txt"
+CHAT_SYSTEM_PROMPT_FILE = WORKSPACE_ROOT/ "src" / "context" / "base_prompt.txt"
 
 CHAT_SYSTEM_PROMPT = CHAT_SYSTEM_PROMPT_FILE.read_text(encoding="utf-8").strip()
 
@@ -141,6 +143,18 @@ async def admin_leads(request: Request):
             "request": request,
             "leads": leads,
             "stats": stats
+        }
+    )
+
+
+@app.get("/chats-history")
+async def chats_history(request: Request):
+    rows = get_chat_history()
+    return templates.TemplateResponse(
+        "chats-history.html",
+        {
+            "request": request,
+            "chats": rows
         }
     )
 
@@ -314,10 +328,45 @@ async def analyze(
 
     return response
 
+@app.post("/chat-unlock")
+async def chat_unlock(
+    request: Request
+):
+    data = await request.json()
+    name = data.get("name", "").strip()
+    phone = data.get("phone", "").strip()
+
+    if not name or not phone:
+        return JSONResponse(
+            {"reply": "Please enter your name and phone number to unlock chat."},
+            status_code=400
+        )
+
+    response = JSONResponse(
+        {"reply": "Chat unlocked."}
+    )
+
+    response.set_cookie(
+        key="chat_name",
+        value=name,
+        max_age=10800,
+        path="/"
+    )
+    response.set_cookie(
+        key="chat_phone",
+        value=phone,
+        max_age=10800,
+        path="/"
+    )
+
+    return response
+
 # CHAT BACKEND
 @app.post("/chat")
 async def chat_ai(
-    request: Request
+    request: Request,
+    chat_name: str | None = Cookie(default=None),
+    chat_phone: str | None = Cookie(default=None)
 ):
 
     data = await request.json()
@@ -410,6 +459,22 @@ Product Recommendation:
         .content
     )
 
+    if not chat_name or not chat_phone:
+        return JSONResponse(
+            {
+                "reply": "Please provide your name and phone number before using chat.",
+                "remaining": questions_left
+            },
+            status_code=400
+        )
+
+    log_chat_history(
+        chat_name,
+        chat_phone,
+        question,
+        reply
+    )
+
     request.session[
         "questions_left"
     ] = questions_left - 1
@@ -423,13 +488,15 @@ Product Recommendation:
     )
 
 
+
 # DOWNLOAD REPORT
 
 @app.post("/download-report")
 async def download_report(
     request: Request,
     name: str = Form(...),
-    phone: str = Form(...)
+    phone: str = Form(...),
+    chat_name_cookie: str | None = Cookie(default=None)
 ):
 
     global result_cache
@@ -456,11 +523,12 @@ async def download_report(
         today
     )
 
-    report_id = str(
-        uuid.uuid4()
-    )[:8].upper()
-
-    pdf_path = REPORT_FOLDER / f"{report_id}.pdf"
+    filename_name = chat_name_cookie or name
+    safe_name = re.sub(r"[^\w-]", "_", filename_name.strip())
+    timestamp_tag = datetime.now().strftime("%Y%m%d_%H%M%S")
+    report_filename = f"{safe_name}_{timestamp_tag}.pdf"
+    pdf_path = REPORT_FOLDER / report_filename
+    report_id = str(uuid.uuid4())[:8].upper()
 
     doc = SimpleDocTemplate(
         str(pdf_path),
@@ -666,7 +734,17 @@ async def download_report(
         elements
     )
 
-    return HTMLResponse(
+    try:
+        if image_cache:
+            image_path = Path(image_cache)
+            if image_path.exists():
+                image_path.unlink()
+    except Exception:
+        pass
+
+    image_cache = ""
+
+    response = HTMLResponse(
         f"""
         <script>
 
@@ -675,8 +753,23 @@ async def download_report(
         );
 
         window.location.href =
-        "/reports/{report_id}.pdf";
+        "/reports/{report_filename}";
 
         </script>
         """
     )
+
+    response.set_cookie(
+        key="chat_name",
+        value=name,
+        max_age=10800,
+        path="/"
+    )
+    response.set_cookie(
+        key="chat_phone",
+        value=phone,
+        max_age=10800,
+        path="/"
+    )
+
+    return response
