@@ -76,7 +76,7 @@ register_heif_opener()
 
 app.mount(
     "/static",
-    StaticFiles(directory="static"),
+    StaticFiles(directory=str(WORKSPACE_ROOT / "static")),
     name="static"
 )
 
@@ -92,7 +92,7 @@ app.mount(
     name="reports"
 )
 
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory=str(WORKSPACE_ROOT / "templates"))
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 result_cache = {}
