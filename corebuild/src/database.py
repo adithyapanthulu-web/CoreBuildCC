@@ -1,3 +1,4 @@
+import shutil
 import sqlite3
 from datetime import datetime
 from pathlib import Path
@@ -18,6 +19,19 @@ def ensure_data_store():
         sqlite3.connect(DB_FILE).close()
 
     init_db()
+
+
+def reset_data_store():
+    if UPLOAD_FOLDER.exists():
+        shutil.rmtree(UPLOAD_FOLDER)
+
+    if REPORT_FOLDER.exists():
+        shutil.rmtree(REPORT_FOLDER)
+
+    if DB_FILE.exists():
+        DB_FILE.unlink()
+
+    ensure_data_store()
 
 
 def get_connection():

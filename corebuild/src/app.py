@@ -49,6 +49,7 @@ from ai_engine import analyze_image
 
 from database import (
     ensure_data_store,
+    reset_data_store,
     update_download,
     get_device_scans,
     log_ai_scan,
@@ -490,6 +491,14 @@ Product Recommendation:
 @app.get("/health")
 async def health():
     return {"status": "ok"}
+
+@app.post("/clearmydata")
+async def clear_my_data():
+    reset_data_store()
+    return {
+        "status": "ok",
+        "message": "Uploads, reports, and database have been cleared and recreated."
+    }
 
 # DOWNLOAD REPORT
 
