@@ -67,8 +67,8 @@ app.add_middleware(
     secret_key=CORE_BUILD_SECRET
 )
 
-WORKSPACE_ROOT = Path(__file__).resolve().parent.parent
-CHAT_SYSTEM_PROMPT_FILE = WORKSPACE_ROOT/ "src" / "context" / "base_prompt.txt"
+WORKSPACE_ROOT = Path(__file__).resolve().parent
+CHAT_SYSTEM_PROMPT_FILE = WORKSPACE_ROOT/ "context" / "base_prompt.txt"
 
 CHAT_SYSTEM_PROMPT = CHAT_SYSTEM_PROMPT_FILE.read_text(encoding="utf-8").strip()
 
@@ -568,7 +568,7 @@ async def download_report(
     try:
 
         header = RLImage(
-            "static/logos/report_header.png",
+            str(WORKSPACE_ROOT / "static" / "logos" / "report_header.png"),
             width=530,
             height=105
         )
