@@ -136,7 +136,7 @@ async def home(
 @app.get("/admin-leads")
 async def admin_leads(request: Request):
     stats,leads = get_dashboard_stats()
-    return templates.TemplateResponse(
+    return templates.TemplateResponse(request,
         "admin_leads.html",
         {
             "request": request,
@@ -149,7 +149,7 @@ async def admin_leads(request: Request):
 @app.get("/chats-history")
 async def chats_history(request: Request):
     rows = get_chat_history()
-    return templates.TemplateResponse(
+    return templates.TemplateResponse(request,
         "chats-history.html",
         {
             "request": request,
