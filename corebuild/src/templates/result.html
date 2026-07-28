@@ -1,237 +1,32 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>CoreBuild AI Report</title>
-    <link rel="stylesheet" href="/static/css/style.css" />
-
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    />
-  </head>
-
-  <body class="result-body">
-    <div class="bg-glow"></div>
-
-    <!-- NAV -->
-
-    <nav class="result-nav">
-      <div class="logo">CoreBuild <span>AI</span></div>
-
-      <a href="/" class="back-btn"> Back Home </a>
-    </nav>
-
-    <!-- REPORT -->
-
-    <div class="report-container">
-      <!-- HEADER -->
-
-      <div class="report-header">
-        <h1>AI Engineering Inspection Report</h1>
-
-        <p>
-          AI-powered construction diagnostics and rehabilitation recommendations
-        </p>
-      </div>
-
-      <!-- IMAGE -->
-
-      <div class="report-image-card">
-        <h3>Inspection Image</h3>
-
-        <img
-          src="{{ image }}"
-          class="inspection-image"
-          alt="Inspection Image"
-        />
-      </div>
-
-      <!-- REPORT CARDS -->
-
-      <div class="report-card">
-        <h3>Detected Issue</h3>
-        <p>{{ result.identified_issues }}</p>
-      </div>
-
-      <div class="report-card">
-        <h3>Root Cause</h3>
-        <p>{{ result.root_cause }}</p>
-      </div>
-
-      <div class="report-card">
-        <h3>Severity Assessment</h3>
-        <p>{{ result.severity }}</p>
-      </div>
-
-      <div class="report-card">
-        <h3>Recommended Treatment</h3>
-        <p>{{ result.recommended_treatment }}</p>
-      </div>
-
-      <div class="report-card">
-        <h3>Site Recommendation</h3>
-        <p>{{ result.site_recommendation }}</p>
-      </div>
-
-      <!-- PRODUCT -->
-
-      {% if result.catalog_recommendation and result.catalog_recommendation|trim
-      != "" %}
-
-      <div class="ai-card">
-        <h2>AI Product System Recommendation</h2>
-
-        <p>{{ result.catalog_recommendation }}</p>
-      </div>
-
-      {% endif %}
-
-      <!-- CHAT -->
-
-      <div class="chat-card">
-        <h2>Ask Your Doubts on CoreBuild AI</h2>
-
-        <p class="chat-subtitle">
-          Understand your inspection better with AI clarification before
-          contacting technical support.
-        </p>
-
-        <div class="question-counter">3 / 3 Questions Remaining</div>
-
-        <button id="openChatBtn" class="chat-btn">Unlock CoreBuild AI</button>
-
-        <div id="chatArea" class="hidden-panel">
-          <div id="chatMessages" class="chat-messages">
-            <div class="ai-msg">
-              <b>CoreBuild AI</b>
-              Hello. Ask your doubts regarding this inspection report.
-            </div>
-          </div>
-
-          <div class="chat-input-row">
-            <input
-              id="chatInput"
-              type="text"
-              placeholder="Ask about this inspection..."
-            />
-
-            <button id="sendChatBtn" class="chat-send-btn">Ask</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- ACTIONS -->
-
-      <div class="action-buttons">
-        <button id="openReportModalBtn" class="download-btn">
-          Download Your AI Report
-        </button>
-
-        <a
-          href="https://wa.me/918867161823?text=Hello%20CoreBuild%20Team,%0A%0AI%20need%20technical%20support%20regarding%20my%20inspection%20report."
-          target="_blank"
-          class="support-btn"
-        >
-          Need Technical Assistance?
-        </a>
-
-        <a href="tel:+919108042362" class="call-btn">
-          <i class="fas fa-phone"></i>
-          Call CoreBuild
-        </a>
-      </div>
-
-      <!-- CHAT MODAL -->
-
-      <div id="chatModal" class="modal">
-        <div class="modal-box">
-          <h2>Unlock CoreBuild AI</h2>
-
-          <p class="modal-note">
-            Enter your details to continue with CoreBuild AI.
-          </p>
-
-          <input id="chatName" type="text" placeholder="Your Name" />
-
-          <input id="chatPhone" type="text" placeholder="WhatsApp Number" />
-
-          <button id="unlockChatBtn" class="download-btn">
-            Unlock CoreBuild AI
-          </button>
-
-          <button id="closeChatModalBtn" class="back-btn modal-close">
-            Close
-          </button>
-        </div>
-      </div>
-
-      <!-- REPORT MODAL -->
-
-      <div id="reportModal" class="modal">
-        <div class="modal-box">
-          <h2>Download Your AI Report</h2>
-
-          <p class="modal-note">
-            Enter your details to generate your AI report.
-          </p>
-
-          <form id="downloadForm" action="/download-report" method="POST">
-            <input id="downloadName" type="text" name="name" placeholder="Your Name" required />
-
-            <input
-              id="downloadPhone"
-              type="text"
-              name="phone"
-              placeholder="WhatsApp Number"
-              required
-            />
-
-            <button type="submit" class="download-btn">Generate Report</button>
-          </form>
-
-          <button id="closeReportModalBtn" class="back-btn modal-close">
-            Close
-          </button>
-        </div>
-      </div>
-
-      <!-- CONTACT -->
-
-      <div class="contact-report">
-        <h2>CoreBuild Construction Chemicals</h2>
-
-        <p>Phone: 8867161823 / 9108042362</p>
-
-        <p>Email: Corebuildccd@gmail.com</p>
-
-        <p>
-          #692 Ground Floor, 6th Block,<br />
-          Dr Rajkumar Road,<br />
-          Rajajinagar, Bangalore – 560010
-        </p>
-
-        <div class="contact-actions">
-          <a
-            href="https://maps.google.com/?q=692+6th+Block+Rajajinagar+Bangalore"
-            target="_blank"
-            class="maps-btn"
-          >
-            Open Google Maps
-          </a>
-
-          <a href="tel:+919108042362" class="call-btn">
-            <i class="fas fa-phone"></i>
-            Call CoreBuild
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- JS -->
-
-    <script src="/static/js/report.js" defer></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111315" />
+  <title>CoreBuild AI Inspection</title>
+  <link rel="stylesheet" href="/static/css/style.css?v=4.1.0" />
+</head>
+<body class="result-body">
+  <nav class="result-nav"><a class="result-brand" href="/"><strong>CoreBuild</strong><span>Construction Chemicals</span></a><a href="/" class="back-btn">Back home</a></nav>
+  <main class="report-container">
+    <section class="report-hero"><div><span>CoreBuild Construction Chemicals presents</span><h1>AI Inspection</h1><p>Preliminary construction diagnosis and repair direction based on the photo you submitted.</p></div><span class="report-hero-badge">Preliminary assessment</span></section>
+    <section class="report-top-grid"><div class="report-image-card"><img src="{{ image }}" class="inspection-image" alt="Inspection image" /></div><div class="report-summary-card"><span class="report-label">Detected issue</span><h2>{{ result.identified_issues }}</h2><div class="severity-chip"><span>Severity assessment</span><strong>{{ result.severity }}</strong></div></div></section>
+    <div class="report-section-title">What the scan found</div>
+    <section class="report-grid">
+      <article class="report-card"><h3>Likely root cause</h3><p>{{ result.root_cause }}</p></article>
+      <article class="report-card"><h3>Recommended treatment</h3><p>{{ result.recommended_treatment }}</p></article>
+      <article class="report-card"><h3>Site recommendation</h3><p>{{ result.site_recommendation }}</p></article>
+      <article class="report-card"><h3>Important</h3><p>This is preliminary visual guidance. Final repair specification may require an on-site assessment.</p></article>
+    </section>
+    {% if result.catalog_recommendation and result.catalog_recommendation|trim != "" %}<section class="ai-card"><h2>Suggested product system</h2><p>{{ result.catalog_recommendation }}</p></section>{% endif %}
+    <section class="result-actions-primary"><a class="result-whatsapp" href="https://wa.me/918867161823?text=Hello%20CoreBuild%20Team,%0A%0AI%20have%20completed%20a%20CoreBuild%20AI%20inspection%20and%20would%20like%20to%20book%20a%20FREE%20site%20visit%20for%20the%20next%20step." target="_blank" rel="noopener noreferrer">Book FREE Site Visit</a><button id="openReportModalBtn" class="result-download" type="button">Download AI report</button></section>
+    <section class="chat-card"><h2>Need a quick clarification?</h2><p class="chat-subtitle">Ask up to three questions about this inspection before you contact the technical team.</p><div class="question-counter">3 / 3 questions remaining</div><button id="openChatBtn" class="chat-btn" type="button">Ask CoreBuild AI</button><div id="chatArea" class="hidden-panel"><div id="chatMessages" class="chat-messages"><div class="ai-msg"><b>CoreBuild AI</b><br>Ask a question about this inspection.</div></div><div class="chat-input-row"><input id="chatInput" type="text" placeholder="Ask about the diagnosis…" /><button id="sendChatBtn" class="chat-send-btn" type="button">Ask</button></div></div></section>
+    <section class="contact-report"><h2>CoreBuild Construction Chemicals</h2><p>88671 61823 · 91080 42362</p><p>Corebuildccd@gmail.com</p><p>#692 Ground Floor, 6th Block, Dr Rajkumar Road, Rajajinagar, Bengaluru – 560010</p><div class="contact-actions"><a href="https://maps.google.com/?q=692+6th+Block+Rajajinagar+Bangalore" target="_blank" rel="noopener noreferrer">Google Maps</a><a href="tel:+919108042362">Call CoreBuild</a></div></section>
+  </main>
+  <div id="chatModal" class="modal"><div class="modal-box"><h2>Unlock CoreBuild AI</h2><p class="modal-note">Enter your name and WhatsApp number to ask questions about this inspection.</p><input id="chatName" type="text" placeholder="Your name" /><input id="chatPhone" type="text" placeholder="WhatsApp number" /><button id="unlockChatBtn" class="download-btn" type="button">Continue</button><button id="closeChatModalBtn" class="back-btn modal-close" type="button">Close</button></div></div>
+  <div id="reportModal" class="modal"><div class="modal-box"><h2>Download AI report</h2><p class="modal-note">Enter your details to generate the report.</p><form id="downloadForm" action="/download-report" method="POST"><input id="downloadName" type="text" name="name" placeholder="Your name" required /><input id="downloadPhone" type="text" name="phone" placeholder="WhatsApp number" required /><button type="submit" class="download-btn">Generate report</button></form><button id="closeReportModalBtn" class="back-btn modal-close" type="button">Close</button></div></div>
+  <div class="result-mobile-dock"><a href="https://wa.me/918867161823?text=Hello%20CoreBuild%20Team,%0A%0AI%20have%20completed%20a%20CoreBuild%20AI%20inspection%20and%20would%20like%20to%20book%20a%20FREE%20site%20visit." target="_blank" rel="noopener noreferrer">FREE Site Visit</a><button id="mobileDownloadBtn" type="button">Download</button></div>
+  <script src="/static/js/report.js?v=4.1.0" defer></script>
+</body>
 </html>

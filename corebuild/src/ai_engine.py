@@ -4,9 +4,7 @@ from recommendation_engine import get_recommendation
 import base64
 import json
 
-client = OpenAI(
-    api_key=OPENAI_API_KEY
-)
+client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
 
 SYSTEM_PROMPT = """
 You are CoreBuild AI.
@@ -72,6 +70,17 @@ Return JSON only:
 
 
 def analyze_image(image_path):
+
+    if client is None:
+        return {
+            "is_valid_scope": True,
+            "identified_issues": "AI inspection is not configured on this server",
+            "root_cause": "The OpenAI API key is missing from the local or deployment environment.",
+            "severity": "Not assessed",
+            "recommended_treatment": "Configure OPENAI_API_KEY (or the existing OPEN_AI_KEY) before using AI analysis.",
+            "site_recommendation": "You can still contact CoreBuild technical support for product and repair guidance.",
+            "catalog_recommendation": ""
+        }
 
     with open(
         image_path,

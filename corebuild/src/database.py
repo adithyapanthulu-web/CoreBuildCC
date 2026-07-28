@@ -1,10 +1,11 @@
+import os
 import shutil
 import sqlite3
 from datetime import datetime
 from pathlib import Path
 
 WORKSPACE_ROOT = Path(__file__).resolve().parent.parent
-DATA_FOLDER = WORKSPACE_ROOT / "data"
+DATA_FOLDER = Path(os.getenv("COREBUILD_DATA_DIR", str(WORKSPACE_ROOT / "data"))).expanduser()
 UPLOAD_FOLDER = DATA_FOLDER / "uploads"
 REPORT_FOLDER = DATA_FOLDER / "reports"
 DB_FILE = DATA_FOLDER / "corebuild.db"

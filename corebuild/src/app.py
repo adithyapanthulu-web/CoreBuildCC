@@ -94,7 +94,7 @@ app.mount(
 )
 
 templates = Jinja2Templates(directory=str(WORKSPACE_ROOT / "templates"))
-client = OpenAI(api_key=OPENAI_API_KEY)
+client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
 
 result_cache = {}
 image_cache = ""
@@ -422,6 +422,15 @@ Product Recommendation:
 {inspection.get('catalog_recommendation','')}
 
 """
+
+    if client is None:
+        return JSONResponse(
+            {
+                "reply": "CoreBuild AI is not configured on this server yet. Please contact the CoreBuild technical team.",
+                "remaining": questions_left
+            },
+            status_code=503
+        )
 
     response = client.chat.completions.create(
 
