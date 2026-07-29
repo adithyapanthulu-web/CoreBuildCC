@@ -18,9 +18,11 @@ from starlette.middleware.sessions import (
     SessionMiddleware
 )
 
+import asyncio
 import re
 import shutil
 import uuid
+from health_check import _healthcheck_loop
 from pathlib import Path
 
 from datetime import datetime
@@ -98,9 +100,10 @@ client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
 
 result_cache = {}
 image_cache = ""
-
+@app.on_event("startup")
+async def start_healthcheck_loop() -> None:
+    asyncio.create_task(_healthcheck_loop())
 # HOME
-
 @app.get("/")
 async def home(
     request: Request,
