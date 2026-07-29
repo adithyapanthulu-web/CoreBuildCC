@@ -2,7 +2,7 @@
 import urllib.request
 import asyncio
 HEALTHCHECK_URL = "http://127.0.0.1:8000/health"
-HEALTHCHECK_INTERVAL_SECONDS = 10
+HEALTHCHECK_INTERVAL_SECONDS = 600
 
 
 def _ping_health_endpoint() -> None:
